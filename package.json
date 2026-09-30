@@ -1,0 +1,11 @@
+{
+  "name": "motor-shorts-terror",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Motor de animação pixelada + áudio para Shorts de terror",
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.0",
+    "node-web-audio-api": "^1.0.0",
+    "@expo-google-fonts/press-start-2p": "^0.4.0"
+  }
+}
