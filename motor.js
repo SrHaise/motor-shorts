@@ -114,7 +114,19 @@ function dialog(g,t,list){
 }
 
 /* ---------- quadro completo ---------- */
+/* ---------- modo pixel: VIDEO.pix(t,E) → {p, light, shake:[dx,dy], post(buf)} em 180×320 (ver pix.js / PIXEL.md) ---------- */
+let PLO=null,PLG=null;
+function framePix(m,t,video,S){
+ const P=root.PIX;if(!PLO){PLO=PF.createCanvas(P.PW,P.PH);PLG=PLO.getContext('2d')}
+ m.setTransform(1,0,0,1,0,0);m.fillStyle='#000';m.fillRect(0,0,W*S,H*S);
+ let r=null;try{r=video.pix(t,API)}catch(e){if(!frame._err){frame._err=1;console.error(e)}}
+ if(r){const buf=r.p.render(r.light);if(r.post)r.post(buf);const id=PLG.createImageData(P.PW,P.PH);id.data.set(buf);PLG.putImageData(id,0,0);
+  const [sx,sy]=r.shake||[0,0],k=P.SC*S;m.imageSmoothingEnabled=false;m.drawImage(PLO,Math.round(sx)*k,Math.round(sy)*k,P.PW*k,P.PH*k)}
+}
 function frame(main,t,video,opts={}){
+ if(video.pix){const S=main.width/W,m=main.getContext('2d');framePix(m,t,video,S);m.setTransform(S,0,0,S,0,0);
+  if(video.overlay){m.save();try{video.overlay(t,m,API)}catch(e){console.error(e)}m.restore()}
+  dialog(m,t,video.dlg||[]);return}
  const pix=opts.pixel!==false,S=main.width/W,m=main.getContext('2d');
  const g=pix?GL:m;g.setTransform(pix?LW/W:S,0,0,pix?LW/W:S,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';
  g.fillStyle='#000';g.fillRect(0,0,W,H);

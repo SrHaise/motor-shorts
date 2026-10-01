@@ -9,8 +9,9 @@ const FPS=+(opt('--fps')||30),preview=opt('--preview');
 const ttf=path.join(path.dirname(require.resolve('@expo-google-fonts/press-start-2p/package.json')),'400Regular','PressStart2P_400Regular.ttf');
 GlobalFonts.registerFromPath(ttf,'Press Start 2P');
 // carrega motor + vídeo
-const ctx={console,Math,Float32Array,Uint8Array,ArrayBuffer,DataView,setTimeout,Object,Array,String,Number,JSON};ctx.globalThis=ctx;vm.createContext(ctx);
+const ctx={console,Math,Float32Array,Uint8Array,Uint8ClampedArray,Int16Array,Set,ArrayBuffer,DataView,setTimeout,Object,Array,String,Number,JSON};ctx.globalThis=ctx;vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(path.join(__dirname,'motor.js'),'utf8'),ctx);
+vm.runInContext(fs.readFileSync(path.join(__dirname,'pix.js'),'utf8'),ctx);   // kit do modo pixel (só é usado se o vídeo tiver pix())
 vm.runInContext(fs.readFileSync(vid,'utf8')+'\n;globalThis.VIDEO=VIDEO;',ctx);
 const E=ctx.ENGINE,V=ctx.VIDEO;E.prepDLG(V.dlg||[]);E.init({createCanvas});
 const DUR=V.dur,main=createCanvas(1080,1920),mctx=main.getContext('2d');
